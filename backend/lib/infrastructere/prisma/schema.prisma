@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  level       Int       @default(1)
+  telegramId  String    @unique
+  username    String?
+  photoUrl    String?
+  coinBalance Decimal   @default(0) @db.Decimal(18, 2)
+  tonBalance  Decimal   @default(0) @db.Decimal(18, 2)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  transactions       Transaction[]
+  userAchievements   UserAchievement[]
+  friendsAsReferrer  Friends[] @relation("FriendsReferrer")
+  friendsAsReferred  Friends[] @relation("FriendsReferred")
+}
+
+model Transaction {
+  id        Int              @id @default(autoincrement())
+  type      TransactionsType
+  amount    Decimal          @db.Decimal(18, 2)
+  userId    Int
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id               Int              @id @default(autoincrement())
+  description      String
+  createdAt        DateTime         @default(now())
+
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id          Int        @id @default(autoincrement())
+  userId      Int
+  achievementId Int
+  createdAt   DateTime   @default(now())
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+}
+
+model Friends {
+  id          Int      @id @default(autoincrement())
+  referrerId  Int
+  referredId  Int
+  createdAt   DateTime @default(now())
+
+  referrer User @relation("FriendsReferrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred User @relation("FriendsReferred", fields: [referredId], references: [id], onDelete: Cascade)
+
+  @@unique([referrerId, referredId])
+}
+
+enum TransactionsType {
+  TOPUP
+  SEND
+  SWITCH_OUT
+  SWITCH_IN
+  RECEIVE
+}
