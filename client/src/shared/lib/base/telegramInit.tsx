@@ -1,5 +1,6 @@
 'use client'
 import { useEffect } from "react";
+import { isMobile } from 'react-device-detect'
 
 const TelegramInit = () => {
     useEffect(() => {
