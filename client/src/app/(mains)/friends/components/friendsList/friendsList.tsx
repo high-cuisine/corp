@@ -3,7 +3,7 @@ import cls from './friendsList.module.scss';
 
 const FriendsList = () => {
 
-    const friends = [
+    const friends:any[] = [
         // {
         //     id: 1,
         //     name: 'John Doe',
