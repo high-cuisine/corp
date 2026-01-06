@@ -1,0 +1,29 @@
+.button {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background: linear-gradient(
+        90deg,
+        #2C2C2C80 -10%,
+        #2C2C2C 95%
+    );
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &.disabled,
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}

@@ -1,0 +1,65 @@
+.invite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & .linkContainer {
+        display: flex;
+        background: linear-gradient(
+            90deg,
+            #647AAB00 -10%,
+            #28314550 80%
+        );
+        border-radius: 10px;
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        margin-top: 60px;
+    
+    }
+
+    & .link {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0px;
+        text-align: center;
+        padding: 12px 20px 0;
+
+        & .linkText {
+            font-size: 10px;
+            font-weight: 400;
+            list-style: 20px;
+        }
+    
+        & .linkValue {
+            font-size: 12px;
+    
+        }
+    }
+
+    & .copyButton {
+        background: linear-gradient(
+            90deg,
+            #2C2C2C80 -10%,
+            #2C2C2C 80%
+        );
+        border-radius: 10px;
+        height: 64px;
+        width: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        aspect-ratio: 1/1;
+        transition: all 0.2s ease;
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}

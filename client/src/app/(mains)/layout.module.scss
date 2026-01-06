@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  & .button {
+    background: linear-gradient(
+        90deg,
+        rgba(100, 122, 171, 0.1) 0%,
+        rgba(100, 122, 171, 0.2) 100%
+    );
+    border-radius: 8px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    aspect-ratio: 1/1;
+  }
+}

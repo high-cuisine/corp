@@ -1,0 +1,38 @@
+.card {
+    background: #D7DEE9;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+
+    font-size: 10px;
+    color: #2c2c2c;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+
+    & .leftContainer {
+        @apply flex gap-[10px] items-center;
+
+        & .icon {
+            background: #647AAB10;
+            border-radius: 50%;
+
+            & img {
+                padding: 5px;
+                width: 17px;
+                height: 17px;
+                background-color: #3C3C3E;
+                border-radius: 50%;
+            }
+        }
+
+        & .textContainer {
+            @apply flex flex-col 
+        }
+    }
+
+    & .rightContainer {
+        @apply flex gap-[10px] items-center flex-col;
+    }
+}

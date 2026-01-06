@@ -1,0 +1,29 @@
+.menu {
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 12px;
+    color: #2c2c2c;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0px;
+    text-align: center;
+
+    & .button {
+        background: linear-gradient(
+            90deg,
+            rgba(100, 122, 171, 0.1) 0%,
+            rgba(100, 122, 171, 0.2) 100%
+        );
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+        max-width: 55px;
+        @apply flex flex-col items-center justify-center;
+
+        & .icon {
+            padding: 5px;
+            border-radius: 50%;
+            @apply bg-[#2C2C2C]
+        }
+    }
+}
