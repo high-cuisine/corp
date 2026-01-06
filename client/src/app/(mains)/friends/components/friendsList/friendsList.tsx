@@ -4,16 +4,16 @@ import cls from './friendsList.module.scss';
 const FriendsList = () => {
 
     const friends = [
-        {
-            id: 1,
-            name: 'John Doe',
-            avatar: 'https://c1.peakpx.com/wallpaper/623/966/324/grey-and-white-short-fur-cat-wallpaper-preview.jpg',
-        },
-        {
-            id: 2,
-            name: 'Jane Doe',
-            avatar: null,
-        }
+        // {
+        //     id: 1,
+        //     name: 'John Doe',
+        //     avatar: 'https://c1.peakpx.com/wallpaper/623/966/324/grey-and-white-short-fur-cat-wallpaper-preview.jpg',
+        // },
+        // {
+        //     id: 2,
+        //     name: 'Jane Doe',
+        //     avatar: null,
+        // }
     ]
     return (
         <div className={cls.friendsList}>

@@ -55,12 +55,15 @@ const useSendTONTransaction = (adminAddress: string) => {
         ]
       };
 
-      await tonConnectUI.sendTransaction(transaction);
+      const result = await tonConnectUI.sendTransaction(transaction);
 
-      console.log("Transaction successfully sent");
+      console.log("Transaction successfully sent", result);
+      return { success: true, result };
     } catch (error) {
-      setError((error as Error).message);
+      const errorMessage = (error as Error).message;
+      setError(errorMessage);
       console.error("Error sending transaction:", error);
+      return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
     }
