@@ -7,21 +7,21 @@ export const paymentUIConfig = [
     {
         label: 'Пополнить',
         icon: PaymentPluseIcon,
-        links: '/replenishment',
+        links: '/payment/top-up',
     },
     {
         label: 'Обменять',
         icon: PaymentSwitchIcon,
-        links: '/switch',
+        links: '/payment/switch',
     },
     {
         label: 'Получить',
         icon: PaymentGetIcon,
-        links: '/getting-money',
+        links: '/payment/get',
     },
     {
         label: 'Отправить',
         icon: PaymentSendIcon,
-        links: '/send',
+        links: '/payment/send',
     },
 ]

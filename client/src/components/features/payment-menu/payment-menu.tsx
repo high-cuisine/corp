@@ -3,7 +3,9 @@ import { paymentUIConfig } from '@/shared/configs/payment.config';
 import Image from 'next/image';
 import Link from 'next/link';
 
+
 const PaymentMenu = () => {
+
 
     return (
         <div className={cls.menu}>

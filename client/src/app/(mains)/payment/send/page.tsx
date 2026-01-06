@@ -5,52 +5,50 @@ import Button from '@/components/ui/button/button';
 import cls from './send.module.scss';
 import { UserAvatar } from '@/components/ui/userAvatar/userAvatar';
 import { useTelegram } from '@/shared/lib/hooks/useTelegram';
-
-const coins = [
-    { name: 'ton' },
-    { name: 'coin' }
-];
-
-interface SelectedRecipient {
-    id: string;
-    username: string;
-    photoUrl?: string;
-}
+import { useSendForm, SelectedRecipient } from './hooks/useSendForm';
+import { useRecipientSearch } from './hooks/useRecipientSearch';
+import { 
+    getRecipientDisplayName, 
+    getRecipientPhotoUrl, 
+    calculateCommission 
+} from './helpers/send.helpers';
+import { AVAILABLE_COINS } from './helpers/send.constants';
 
 const Send = () => {
-    const { username: telegramUsername, photoUrl: telegramPhotoUrl } = useTelegram();
+    const { photoUrl: telegramPhotoUrl } = useTelegram();
     const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
     const [isRecipientModalOpen, setIsRecipientModalOpen] = useState(false);
-    const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
-    const [selectedRecipient, setSelectedRecipient] = useState<SelectedRecipient | null>(null);
-    const [amount, setAmount] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<SelectedRecipient[]>([]);
+    
+    const {
+        selectedCoin,
+        selectedRecipient,
+        amount,
+        setSelectedCoin,
+        setSelectedRecipient,
+        setAmount,
+    } = useSendForm();
+
+    const {
+        searchQuery,
+        searchResults,
+        handleSearch,
+        clearSearch,
+    } = useRecipientSearch();
 
     const handleSelectCoin = (coinName: string) => {
         setSelectedCoin(coinName);
         setIsCoinModalOpen(false);
     };
 
-    const handleSearch = (query: string) => {
-        setSearchQuery(query);
-        // Здесь будет API запрос для поиска пользователей
-        // Пока используем mock данные
-        if (query.trim()) {
-            setSearchResults([
-                { id: '1', username: 'user1', photoUrl: '' },
-                { id: '2', username: 'user2', photoUrl: '' },
-            ]);
-        } else {
-            setSearchResults([]);
-        }
-    };
-
     const handleSelectRecipient = (recipient: SelectedRecipient) => {
         setSelectedRecipient(recipient);
         setIsRecipientModalOpen(false);
-        setSearchQuery('');
-        setSearchResults([]);
+        clearSearch();
+    };
+
+    const handleCloseRecipientModal = () => {
+        setIsRecipientModalOpen(false);
+        clearSearch();
     };
 
     const handleReceive = () => {
@@ -58,8 +56,9 @@ const Send = () => {
         console.log('Receive:', { coin: selectedCoin, recipient: selectedRecipient, amount });
     };
 
-    const displayRecipient = selectedRecipient?.username || 'Получатель';
-    const displayPhotoUrl = selectedRecipient?.photoUrl || telegramPhotoUrl || '';
+    const displayRecipient = getRecipientDisplayName(selectedRecipient);
+    const displayPhotoUrl = getRecipientPhotoUrl(selectedRecipient, telegramPhotoUrl || '');
+    const commission = calculateCommission(amount);
 
     return (
         <div className={cls.send}>
@@ -111,7 +110,7 @@ const Send = () => {
             {/* Комиссия */}
             <div className={cls.commission}>
                 <span className={cls.commissionLabel}>Комиссия:</span>
-                <span className={cls.commissionValue}>0.00</span>
+                <span className={cls.commissionValue}>{commission}</span>
             </div>
 
             {/* Кнопка Получить */}
@@ -126,7 +125,7 @@ const Send = () => {
                 title="Выберите монету"
             >
                 <div className={cls.coinList}>
-                    {coins.map((coin) => (
+                    {AVAILABLE_COINS.map((coin) => (
                         <button
                             key={coin.name}
                             className={`${cls.coinItem} ${selectedCoin === coin.name ? cls.active : ''}`}
@@ -146,11 +145,7 @@ const Send = () => {
             {/* Модальное окно выбора получателя */}
             <Modal 
                 isOpen={isRecipientModalOpen} 
-                onClose={() => {
-                    setIsRecipientModalOpen(false);
-                    setSearchQuery('');
-                    setSearchResults([]);
-                }} 
+                onClose={handleCloseRecipientModal} 
                 title="Выберите получателя"
             >
                 <div className={cls.modalContent}>

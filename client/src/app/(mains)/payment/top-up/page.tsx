@@ -6,97 +6,81 @@ import { UserAvatar } from '@/components/ui/userAvatar/userAvatar';
 import { useTelegram } from '@/shared/lib/hooks/useTelegram';
 import { Modal } from '@/components/layout/modal/modal';
 import Button from '@/components/ui/button/button';
-import { useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
-
-interface SelectedUser {
-    id: string;
-    username: string;
-    photoUrl?: string;
-}
+import { useTopUpForm, SelectedUser } from './hooks/useTopUpForm';
+import { useUserSearch } from './hooks/useUserSearch';
+import { useTopUpTransaction } from './hooks/useTopUpTransaction';
+import { 
+    validateAmount, 
+    getUserDisplayName, 
+    getUserPhotoUrl, 
+    calculateCommission 
+} from './helpers/topUp.helpers';
 
 const TopUp = () => {
     const { user } = useUserStore();
     const { username: telegramUsername, photoUrl: telegramPhotoUrl } = useTelegram();
-    const [tonConnectUI] = useTonConnectUI();
-    const address = useTonAddress();
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [isTopUpModalOpen, setIsTopUpModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
-    const [amount, setAmount] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<SelectedUser[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    
+    const {
+        selectedUser,
+        amount,
+        setSelectedUser,
+        setAmount,
+        resetForm,
+    } = useTopUpForm();
 
-    // Mock users для демонстрации (в реальном проекте это будет API запрос)
-    const handleSearch = (query: string) => {
-        setSearchQuery(query);
-        // Здесь будет API запрос для поиска пользователей
-        // Пока используем mock данные
-        if (query.trim()) {
-            setSearchResults([
-                { id: '1', username: 'user1', photoUrl: '' },
-                { id: '2', username: 'user2', photoUrl: '' },
-            ]);
-        } else {
-            setSearchResults([]);
-        }
-    };
+    const {
+        searchQuery,
+        searchResults,
+        handleSearch,
+        clearSearch,
+    } = useUserSearch();
+
+    const {
+        isLoading,
+        address,
+        handleConnectWallet,
+        handleSignTransaction,
+    } = useTopUpTransaction();
 
     const handleSelectUser = (user: SelectedUser) => {
         setSelectedUser(user);
         setIsUserModalOpen(false);
-        setSearchQuery('');
-        setSearchResults([]);
+        clearSearch();
+    };
+
+    const handleCloseUserModal = () => {
+        setIsUserModalOpen(false);
+        clearSearch();
     };
 
     const handleTopUp = () => {
-        if (!amount || parseFloat(amount) <= 0) {
+        if (!validateAmount(amount)) {
             return;
         }
         setIsTopUpModalOpen(true);
     };
 
-    const handleConnectWallet = () => {
-        tonConnectUI.openModal();
-    };
-
-    const handleSignTransaction = async () => {
-        if (!address || !amount) return;
-
-        try {
-            setIsLoading(true);
-            
-            // Здесь должен быть адрес получателя (контракт или адрес для пополнения)
-            // Пока используем заглушку - в реальном проекте нужно получить адрес с бэкенда
-            const recipientAddress = 'EQD__________________________________________0vo'; // Замените на реальный адрес
-            
-            // Конвертируем TON в нанотонны (1 TON = 1,000,000,000 нанотонов)
-            const amountInNano = (parseFloat(amount) * 1000000000).toString();
-            
-            const transaction = {
-                messages: [
-                    {
-                        address: recipientAddress,
-                        amount: amountInNano,
-                    },
-                ],
-                validUntil: Date.now() + 5 * 60 * 1000, // 5 minutes
-            };
-
-            await tonConnectUI.sendTransaction(transaction);
-            
-            // После успешной транзакции закрываем модальное окно
+    const handleCloseTopUpModal = () => {
+        if (!isLoading) {
             setIsTopUpModalOpen(false);
-            setAmount('');
-        } catch (error) {
-            console.error('Transaction error:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
-    const displayUsername = selectedUser?.username || telegramUsername || 'User name';
-    const displayPhotoUrl = selectedUser?.photoUrl || telegramPhotoUrl || '';
+    const handleSignTransactionClick = async () => {
+        try {
+            await handleSignTransaction(amount);
+            setIsTopUpModalOpen(false);
+            resetForm();
+        } catch (error) {
+            // Ошибка уже обработана в хуке
+        }
+    };
+
+    const displayUsername = getUserDisplayName(selectedUser, telegramUsername || 'User name');
+    const displayPhotoUrl = getUserPhotoUrl(selectedUser, telegramPhotoUrl || '');
+    const commission = calculateCommission(amount);
 
     return (
         <div className={cls.topUp}>
@@ -134,7 +118,7 @@ const TopUp = () => {
             <div className={cls.details}>
                     <div className={cls.detailRow}>
                         <span className={cls.detailLabel}>Комиссия:</span>
-                        <span className={cls.detailValue}>0.00</span>
+                        <span className={cls.detailValue}>{commission}</span>
                     </div>
                     <div className={cls.detailRow}>
                         <span className={cls.detailLabel}>Курс:</span>
@@ -145,11 +129,7 @@ const TopUp = () => {
                 Пополнить
             </Button>
 
-            <Modal isOpen={isUserModalOpen} onClose={() => {
-                setIsUserModalOpen(false);
-                setSearchQuery('');
-                setSearchResults([]);
-            }} title="Выберите пользователя">
+            <Modal isOpen={isUserModalOpen} onClose={handleCloseUserModal} title="Выберите пользователя">
                 <div className={cls.modalContent}>
                     <input
                         type="text"
@@ -186,11 +166,7 @@ const TopUp = () => {
                 </div>
             </Modal>
 
-            <Modal isOpen={isTopUpModalOpen} onClose={() => {
-                if (!isLoading) {
-                    setIsTopUpModalOpen(false);
-                }
-            }} title="Пополнение TON">
+            <Modal isOpen={isTopUpModalOpen} onClose={handleCloseTopUpModal} title="Пополнение TON">
                 <div className={cls.topUpModalContent}>
                     <div className={cls.transactionInfo}>
                         <div className={cls.infoRow}>
@@ -203,7 +179,7 @@ const TopUp = () => {
                         </div>
                         <div className={cls.infoRow}>
                             <span className={cls.infoLabel}>Комиссия:</span>
-                            <span className={cls.infoValue}>0.00 TON</span>
+                            <span className={cls.infoValue}>{commission} TON</span>
                         </div>
                     </div>
 
@@ -223,7 +199,7 @@ const TopUp = () => {
                                 <span>Кошелек подключен</span>
                             </div>
                             <Button 
-                                onClick={handleSignTransaction} 
+                                onClick={handleSignTransactionClick} 
                                 customClass={cls.signButton}
                                 disabled={isLoading}
                             >

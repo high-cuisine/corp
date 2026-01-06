@@ -33,6 +33,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.0.0",
     "@telegram-apps/init-data-node": "^2.0.10",
+    "axios": "^1.13.2",
     "cookie-parser": "^1.4.7",
     "jsonwebtoken": "^9.0.3",
     "reflect-metadata": "^0.2.2",

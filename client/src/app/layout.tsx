@@ -4,7 +4,7 @@ import Script from "next/script";
 import { TelegramGlobal } from '@/shared/declare/telegram-global';
 import { TonConnectProvider } from '@/shared/providers/ton-connect-provider';
 import { Toasts } from '@/components/layout/toasts/toasts';
-
+import TelegramInit from '@/shared/lib/base/telegramInit';    
 import "./globals.css";
 
 const manrope = Manrope({
@@ -31,6 +31,7 @@ export default function RootLayout({
             <TelegramGlobal/>
           </div>
           <Toasts />
+          <TelegramInit />
         </TonConnectProvider>
       </body>
       <Script
