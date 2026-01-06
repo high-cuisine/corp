@@ -51,8 +51,6 @@ const useSendTONTransaction = (adminAddress: string) => {
           {
             address: adminAddress,
             amount: amountNano,
-            payload: '',
-            stateInit: ''
           }
         ]
       };

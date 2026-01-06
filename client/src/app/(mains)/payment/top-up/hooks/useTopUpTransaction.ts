@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
 import useSendTONTransaction from '@/shared/lib/hooks/useSendTonTransaction';
-import { convertTonToNano } from '../helpers/topUp.helpers';
 
 interface UseTopUpTransactionReturn {
     isLoading: boolean;
@@ -26,18 +25,17 @@ export const useTopUpTransaction = (): UseTopUpTransactionReturn => {
         if (!address || !amount || !tonConnectUI) return;
 
         try {
-            setIsLoading(true);            
+            setIsLoading(true);
             
-            const amountInNano = convertTonToNano(amount);
-            
-            await sendTransaction(amountInNano);
+            // sendTransaction ожидает amount в TON, конвертация происходит внутри хука
+            await sendTransaction(amount);
         } catch (error) {
             console.error('Transaction error:', error);
             throw error;
         } finally {
             setIsLoading(false);
         }
-    }, [address, tonConnectUI]);
+    }, [address, tonConnectUI, sendTransaction]);
 
     return {
         isLoading,
