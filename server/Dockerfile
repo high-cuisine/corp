@@ -25,8 +25,9 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Install Prisma CLI globally for migrations
-RUN npm install -g prisma
+# Install Prisma CLI globally for migrations and postgresql-client for health checks
+RUN npm install -g prisma && \
+    apk add --no-cache postgresql-client
 
 # Copy package files
 COPY package*.json ./
