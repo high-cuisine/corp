@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import { useTonConnectUI, useTonAddress } from '@tonconnect/ui-react';
 import useSendTONTransaction from '@/shared/lib/hooks/useSendTonTransaction';
+import { paymentServiceInstance } from '@/features/payment/payment';
+
 
 interface TransactionResult {
     success: boolean;
@@ -46,6 +48,19 @@ export const useTopUpTransaction = (): UseTopUpTransactionReturn => {
             
             // sendTransaction ожидает amount в TON, конвертация происходит внутри хука
             const result = await sendTransaction(amount);
+            
+            if(result.success) {
+                try {
+                    // Вызываем метод topUp при успешной транзакции
+                    const amountNumber = parseFloat(amount);
+                    if (!isNaN(amountNumber) && amountNumber > 0) {
+                        await paymentServiceInstance.topUp(amountNumber, 'TON');
+                    }
+                } catch (topUpError) {
+                    console.error('Error calling topUp:', topUpError);
+                    // Не прерываем успешную транзакцию, только логируем ошибку
+                }
+            }
             
             setTransactionResult(result);
             return result;

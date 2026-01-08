@@ -2,6 +2,7 @@
 import { Modal } from '@/components/layout/modal/modal';
 import Button from '@/components/ui/button/button';
 import { useCoinExchange } from './hooks/useCoinExchange';
+import { useSwitchTransaction } from './hooks/useSwitchTransaction';
 import { COINS } from './helpers/coins.helper';
 import cls from './switch.module.scss';
 
@@ -24,9 +25,13 @@ const Switch = () => {
         handleSwap,
     } = useCoinExchange();
 
-    const handleExchange = () => {
-        // Здесь будет логика обмена
-        console.log('Exchange:', { sellCoin, sellAmount, buyCoin, buyAmount });
+    const {
+        isLoading,
+        handleExchange,
+    } = useSwitchTransaction();
+
+    const handleExchangeClick = async () => {
+        await handleExchange(sellCoin, buyCoin, sellAmount);
     };
 
     return (
@@ -116,8 +121,12 @@ const Switch = () => {
             </div>
 
             {/* Кнопка Обменять */}
-            <Button onClick={handleExchange} customClass={cls.exchangeButton}>
-                Обменять
+            <Button 
+                onClick={handleExchangeClick} 
+                customClass={cls.exchangeButton}
+                disabled={isLoading}
+            >
+                {isLoading ? 'Обмен...' : 'Обменять'}
             </Button>
 
             {/* Модальное окно выбора монеты для продажи */}

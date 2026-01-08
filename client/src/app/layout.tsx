@@ -6,6 +6,7 @@ import { TonConnectProvider } from '@/shared/providers/ton-connect-provider';
 import { Toasts } from '@/components/layout/toasts/toasts';
 import TelegramInit from '@/shared/lib/base/telegramInit';    
 import "./globals.css";
+import { AuthComponent } from '../features/user/Auth';
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body className={`${manrope.className} antialiased`}>
         <TonConnectProvider>
           <div className="container mx-auto h-[calc(100vh)] pb-[168px] overflow-y-auto">
+            <AuthComponent />
             {children}
             <TelegramGlobal/>
           </div>

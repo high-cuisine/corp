@@ -11,7 +11,7 @@ import {
   declare module 'express' {
     interface Request {
       user?: {
-        userId: string;
+        userId: number;
       };
     }
   }
@@ -31,7 +31,9 @@ import {
       try {
         const payload = this.jwtService.validateToken(token);
         // Добавляем userId в request для использования в контроллерах
-        request.user = { userId: payload.userId };
+        request.user = { 
+          userId: payload.userId 
+        };
         return true;
       } catch (error) {
         if (error instanceof UnauthorizedException) {

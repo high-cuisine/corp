@@ -7,6 +7,7 @@ import { UserAvatar } from '@/components/ui/userAvatar/userAvatar';
 import { useTelegram } from '@/shared/lib/hooks/useTelegram';
 import { useSendForm, SelectedRecipient } from './hooks/useSendForm';
 import { useRecipientSearch } from './hooks/useRecipientSearch';
+import { useSendTransaction } from './hooks/useSendTransaction';
 import { 
     getRecipientDisplayName, 
     getRecipientPhotoUrl, 
@@ -26,6 +27,7 @@ const Send = () => {
         setSelectedCoin,
         setSelectedRecipient,
         setAmount,
+        resetForm,
     } = useSendForm();
 
     const {
@@ -34,6 +36,11 @@ const Send = () => {
         handleSearch,
         clearSearch,
     } = useRecipientSearch();
+
+    const {
+        isLoading,
+        handleSend,
+    } = useSendTransaction();
 
     const handleSelectCoin = (coinName: string) => {
         setSelectedCoin(coinName);
@@ -51,9 +58,11 @@ const Send = () => {
         clearSearch();
     };
 
-    const handleReceive = () => {
-        // Здесь будет логика получения
-        console.log('Receive:', { coin: selectedCoin, recipient: selectedRecipient, amount });
+    const handleSendClick = async () => {
+        await handleSend(selectedCoin, selectedRecipient, amount, () => {
+            // Сбрасываем форму после успешной отправки
+            resetForm();
+        });
     };
 
     const displayRecipient = getRecipientDisplayName(selectedRecipient);
@@ -62,7 +71,7 @@ const Send = () => {
 
     return (
         <div className={cls.send}>
-            <h1 className={cls.title}>Получить</h1>
+            <h1 className={cls.title}>Отправить</h1>
 
             {/* Карточка выбора монеты */}
             <div className={cls.card}>
@@ -113,9 +122,13 @@ const Send = () => {
                 <span className={cls.commissionValue}>{commission}</span>
             </div>
 
-            {/* Кнопка Получить */}
-            <Button onClick={handleReceive} customClass={cls.receiveButton}>
-                Получить
+            {/* Кнопка Отправить */}
+            <Button 
+                onClick={handleSendClick} 
+                customClass={cls.receiveButton}
+                disabled={isLoading}
+            >
+                {isLoading ? 'Отправка...' : 'Отправить'}
             </Button>
 
             {/* Модальное окно выбора монеты */}

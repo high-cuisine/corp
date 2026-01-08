@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { userService } from '@/entites/user/api/api';
+import { authService } from '@/features/user/authService';
 import { SelectedRecipient } from './useSendForm';
 
 interface UseRecipientSearchReturn {
@@ -9,6 +9,12 @@ interface UseRecipientSearchReturn {
     handleSearch: (query: string) => void;
     clearSearch: () => void;
 }
+
+// Проверяет, является ли строка валидным username (без пробелов, минимум 1 символ)
+const isValidUsername = (query: string): boolean => {
+    const trimmed = query.trim();
+    return trimmed.length > 0 && !trimmed.includes(' ');
+};
 
 export const useRecipientSearch = (): UseRecipientSearchReturn => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -23,17 +29,28 @@ export const useRecipientSearch = (): UseRecipientSearchReturn => {
             return;
         }
 
+        // Проверяем, что пользователь полностью ввел имя (валидный username)
+        if (!isValidUsername(query)) {
+            setSearchResults([]);
+            return;
+        }
+
         setIsSearching(true);
         try {
-            // TODO: Заменить на реальный API запрос
-            // const response = await userService.findUserByUsername(query);
-            // setSearchResults(response.user ? [response.user] : []);
+            // Используем authService.getUser для проверки пользователя
+            const response = await authService.getUser(query.trim());
             
-            // Временная mock логика
-            setSearchResults([
-                { id: '1', username: 'user1', photoUrl: '' },
-                { id: '2', username: 'user2', photoUrl: '' },
-            ]);
+            if (response.user) {
+                // Преобразуем данные пользователя в формат SelectedRecipient
+                const recipient: SelectedRecipient = {
+                    id: response.user.id?.toString() || response.user._id?.toString() || '',
+                    username: response.user.username || query.trim(),
+                    photoUrl: response.user.photoUrl || response.user.avatar || undefined,
+                };
+                setSearchResults([recipient]);
+            } else {
+                setSearchResults([]);
+            }
         } catch (error) {
             console.error('Error searching users:', error);
             setSearchResults([]);
