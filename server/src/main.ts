@@ -26,10 +26,21 @@ async function bootstrap() {
     
     const port = process.env.PORT ?? 3000;
     console.log(`Attempting to listen on port ${port}...`);
-    await app.listen(port, '0.0.0.0');
-    console.log(`✅ Application is running on: http://0.0.0.0:${port}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`Database URL: ${process.env.DATABASE_URL ? 'configured' : 'not configured'}`);
+    console.log('Waiting for all modules to initialize...');
+    
+    // Give modules time to initialize (especially Prisma connection)
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    try {
+      console.log('Starting HTTP server...');
+      await app.listen(port, '0.0.0.0');
+      console.log(`✅ Application is running on: http://0.0.0.0:${port}`);
+      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`Database URL: ${process.env.DATABASE_URL ? 'configured' : 'not configured'}`);
+    } catch (listenError) {
+      console.error('❌ Error listening on port:', listenError);
+      throw listenError;
+    }
   } catch (error) {
     console.error('❌ Error starting application:', error);
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
