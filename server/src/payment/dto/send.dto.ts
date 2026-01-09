@@ -1,7 +1,6 @@
 import { IsEnum, IsNumber, Min } from 'class-validator';
 
 export class SendDTO {
-    id: number;
 
     @IsNumber()
     toId: number;
