@@ -11,7 +11,7 @@ class AuthService {
         return response;
     }
 
-    async getUser(username: string): Promise<{user: any}> {
+    async getUser(username: string): Promise<{id: number, username: string, photoUrl: string | null}> {
         return await userService.findUserByUsername(username);
     }
 

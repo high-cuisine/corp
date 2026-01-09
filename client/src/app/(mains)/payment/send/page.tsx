@@ -33,9 +33,10 @@ const Send = () => {
     const {
         searchQuery,
         searchResults,
+        isSearching,
         handleSearch,
         clearSearch,
-    } = useRecipientSearch();
+    } = useRecipientSearch({ selectedRecipient });
 
     const {
         isLoading,
@@ -170,24 +171,32 @@ const Send = () => {
                         onChange={(e) => handleSearch(e.target.value)}
                     />
                     <div className={cls.userList}>
-                        {searchResults.length > 0 ? (
-                            searchResults.map((user) => (
-                                <button
-                                    key={user.id}
-                                    className={`${cls.userItem} ${selectedRecipient?.id === user.id ? cls.active : ''}`}
-                                    onClick={() => handleSelectRecipient(user)}
-                                >
-                                    <UserAvatar avatar={user.photoUrl || ''} name={user.username} />
-                                    <span className={cls.userItemUsername}>@{user.username}</span>
-                                    {selectedRecipient?.id === user.id && (
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="#2C2C2C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    )}
-                                </button>
-                            ))
+                        {isSearching ? (
+                            <div className={cls.emptyState}>
+                                <span>Поиск...</span>
+                            </div>
+                        ) : searchResults.length > 0 ? (
+                            searchResults.map((user) => {
+                                const isSelected = selectedRecipient?.id === String(user.id);
+                                return (
+                                    <button
+                                        key={user.id}
+                                        className={`${cls.userItem} ${isSelected ? cls.active : ''}`}
+                                        onClick={() => handleSelectRecipient(user)}
+                                        disabled={isSelected}
+                                    >
+                                        <UserAvatar avatar={user.photoUrl || ''} name={user.username} />
+                                        <span className={cls.userItemUsername}>@{user.username}</span>
+                                        {isSelected && (
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16.6667 5L7.50004 14.1667L3.33337 10" stroke="#2C2C2C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        )}
+                                    </button>
+                                );
+                            })
                         ) : (
-                            searchQuery.trim() && (
+                            searchQuery.trim() && !isSearching && (
                                 <div className={cls.emptyState}>
                                     <span>Пользователи не найдены</span>
                                 </div>

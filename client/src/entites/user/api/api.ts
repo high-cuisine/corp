@@ -6,8 +6,9 @@ class UserService {
         return response.data;
     }
 
-    async findUserByUsername(username: string): Promise<{user: any}> {
+    async findUserByUsername(username: string): Promise<{id: number, username: string, photoUrl: string | null}> {
         const response = await api.$authHost.get(`/users/get-user-by-name?name=${username}`);
+        // Сервер возвращает объект напрямую {id, username, photoUrl}
         return response.data;
     }
 }

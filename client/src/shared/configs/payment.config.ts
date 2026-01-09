@@ -17,7 +17,7 @@ export const paymentUIConfig = [
     {
         label: 'Получить',
         icon: PaymentGetIcon,
-        links: '/payment/get',
+        links: '/payment/qrcode',
     },
     {
         label: 'Отправить',
