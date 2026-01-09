@@ -29,10 +29,13 @@ async function bootstrap() {
     console.log('Waiting for all modules to initialize...');
     
     // Give modules time to initialize (especially Prisma connection)
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    console.log('Waiting for modules to initialize...');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    console.log('Modules initialization wait completed');
     
     try {
       console.log('Starting HTTP server...');
+      console.log(`Binding to 0.0.0.0:${port}...`);
       
       // Use Promise to catch any errors during listen
       const server = await app.listen(port, '0.0.0.0');
@@ -40,7 +43,8 @@ async function bootstrap() {
       console.log(`✅ Application is running on: http://0.0.0.0:${port}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`Database URL: ${process.env.DATABASE_URL ? 'configured' : 'not configured'}`);
-      console.log(`Server address: ${server.address()}`);
+      console.log(`Server address: ${JSON.stringify(server.address())}`);
+      console.log('✅ Server is ready to accept connections');
       
       // Keep process alive
       process.on('SIGTERM', async () => {

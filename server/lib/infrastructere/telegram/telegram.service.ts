@@ -30,8 +30,19 @@ export class TelegramService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleInit() {
-    // Команды и обновления настраиваются через TelegramUpdate
-    await this.bot.launch();
+    // Запускаем бота асинхронно, не блокируя запуск приложения
+    setImmediate(async () => {
+      try {
+        // Команды и обновления настраиваются через TelegramUpdate
+        console.log('[TelegramService] Starting Telegram bot...');
+        await this.bot.launch();
+        console.log('[TelegramService] ✅ Telegram bot started successfully');
+      } catch (error) {
+        console.error('[TelegramService] ❌ Failed to start Telegram bot:', error);
+        console.error('[TelegramService] Application will continue without Telegram bot');
+        // Don't throw error - allow application to start without Telegram bot
+      }
+    });
   }
 
   async onModuleDestroy() {
