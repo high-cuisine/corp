@@ -4,7 +4,14 @@ import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   try {
-    const app = await NestFactory.create(AppModule);
+    console.log('Starting NestJS application...');
+    console.log(`PORT: ${process.env.PORT}`);
+    console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+    console.log(`DATABASE_URL: ${process.env.DATABASE_URL ? 'configured' : 'not configured'}`);
+    
+    const app = await NestFactory.create(AppModule, {
+      logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+    });
     
     // Enable CORS with credentials
     app.enableCors({
@@ -17,12 +24,20 @@ async function bootstrap() {
     // Enable cookie parser
     app.use(cookieParser());
     
-    const port = process.env.PORT ?? 5454;
+    const port = process.env.PORT ?? 3000;
+    console.log(`Attempting to listen on port ${port}...`);
     await app.listen(port, '0.0.0.0');
-    console.log(`Application is running on: http://0.0.0.0:${port}`);
+    console.log(`✅ Application is running on: http://0.0.0.0:${port}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`Database URL: ${process.env.DATABASE_URL ? 'configured' : 'not configured'}`);
   } catch (error) {
-    console.error('Error starting application:', error);
+    console.error('❌ Error starting application:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     process.exit(1);
   }
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('❌ Fatal error in bootstrap:', error);
+  process.exit(1);
+});
