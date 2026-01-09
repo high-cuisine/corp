@@ -29,16 +29,33 @@ async function bootstrap() {
     console.log('Waiting for all modules to initialize...');
     
     // Give modules time to initialize (especially Prisma connection)
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     try {
       console.log('Starting HTTP server...');
-      await app.listen(port, '0.0.0.0');
+      
+      // Use Promise to catch any errors during listen
+      const server = await app.listen(port, '0.0.0.0');
+      
       console.log(`✅ Application is running on: http://0.0.0.0:${port}`);
       console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`Database URL: ${process.env.DATABASE_URL ? 'configured' : 'not configured'}`);
+      console.log(`Server address: ${server.address()}`);
+      
+      // Keep process alive
+      process.on('SIGTERM', async () => {
+        console.log('SIGTERM signal received: closing HTTP server');
+        await app.close();
+      });
+      
+      process.on('SIGINT', async () => {
+        console.log('SIGINT signal received: closing HTTP server');
+        await app.close();
+      });
     } catch (listenError) {
       console.error('❌ Error listening on port:', listenError);
+      console.error('Error details:', listenError instanceof Error ? listenError.message : String(listenError));
+      console.error('Error stack:', listenError instanceof Error ? listenError.stack : 'No stack trace');
       throw listenError;
     }
   } catch (error) {
