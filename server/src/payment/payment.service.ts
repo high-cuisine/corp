@@ -20,31 +20,40 @@ export class PaymentService {
     }
 
     async send(fromId: string, toId: string, token: string, amount: number) {
-        const user = await this.usersRepository.findUserById(Number(fromId));
+        const fromUser = await this.usersRepository.findUserById(Number(fromId));
+        const toUser = await this.usersRepository.findUserById(Number(toId));
 
-        if(!user) {
-            throw new BadRequestException('user not found');
+        if(!fromUser) {
+            throw new BadRequestException('sender user not found');
+        }
+
+        if(!toUser) {
+            throw new BadRequestException('recipient user not found');
         }
 
         try {
             if(token === 'TON' || token === 'ton') {
-                if(Number(user.tonBalance) < Number(amount)) 
+                if(Number(fromUser.tonBalance) < Number(amount)) 
                     throw new BadRequestException('balance to low') 
                 await this.usersRepository.incrementTonBalance(Number(toId), amount)
                 await this.usersRepository.decrementTonBalance(Number(fromId), amount)
 
-                await this.telegramService.sendMessage(Number(toId), `Вы получили ${amount} TON от ${user.username}`);
+                // Используем telegramId вместо id для отправки сообщения
+                const toTelegramId = Number(toUser.telegramId);
+                await this.telegramService.sendMessage(toTelegramId, `Вы получили ${amount} TON от ${fromUser.username}`);
                 const receiveTransaction = await this.createTransaction('RECEIVE', 'TON', amount, Number(toId));
                 await this.createTransaction('SEND', 'TON', amount, Number(fromId));
                 return receiveTransaction;
             }
             else {
-                if(Number(user.coinBalance) < Number(amount)) 
+                if(Number(fromUser.coinBalance) < Number(amount)) 
                     throw new BadRequestException('balance to low')
                 await this.usersRepository.incrementCoinBalance(Number(toId), amount)
-                await this.usersRepository.decrementCoinBalance(Number(fromId), amount)
+                await this.usersRepository.decrementTonBalance(Number(fromId), amount)
 
-                await this.telegramService.sendMessage(Number(toId), `Вы получили ${amount} ${token} от ${user.username}`);
+                // Используем telegramId вместо id для отправки сообщения
+                const toTelegramId = Number(toUser.telegramId);
+                await this.telegramService.sendMessage(toTelegramId, `Вы получили ${amount} ${token} от ${fromUser.username}`);
                 const receiveTransaction = await this.createTransaction('RECEIVE', 'COIN', amount, Number(toId));
                 await this.createTransaction('SEND', 'COIN', amount, Number(fromId));
                 return receiveTransaction;
@@ -80,7 +89,9 @@ export class PaymentService {
             transaction = await this.createTransaction('SWITCH_IN', tokenTo, amount, userId);
         }
 
-        await this.telegramService.sendMessage(userId, `Вы обменяли ${amount} ${tokenFrom} на ${amount} ${tokenTo}`);
+        // Используем telegramId вместо id для отправки сообщения
+        const telegramId = Number(user.telegramId);
+        await this.telegramService.sendMessage(telegramId, `Вы обменяли ${amount} ${tokenFrom} на ${amount} ${tokenTo}`);
         return transaction;
     }
 
