@@ -13,6 +13,9 @@ async function bootstrap() {
       logger: ['error', 'warn', 'log', 'debug', 'verbose'],
     });
     
+    // Set global prefix for all routes
+    app.setGlobalPrefix('api');
+    
     // Enable CORS with credentials
     app.enableCors({
       origin: process.env.CLIENT_URL || 'http://localhost:3001',
