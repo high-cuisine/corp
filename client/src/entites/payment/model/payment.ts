@@ -11,7 +11,11 @@ export interface PaymentStore {
 
 export interface Transaction {
     id: number;
-    type: 'SEND' | 'RECEIVE' | 'SWITCH' | 'TOPUP';
+    type: 'SEND' | 'RECEIVE' | 'SWITCH_OUT' | 'SWITCH_IN' | 'TOPUP';
+    amount: string | number;
+    token: 'TON' | 'COIN';
+    userId: number;
+    createdAt: string;
 }
 
 export const usePaymentStore = create<PaymentStore>((set) => ({

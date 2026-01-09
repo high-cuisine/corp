@@ -1,3 +1,10 @@
 .list {
     @apply flex gap-[10px] mt-[20px] w-full flex-col
 }
+
+.empty {
+    text-align: center;
+    padding: 20px;
+    color: #666666;
+    font-size: 14px;
+}
