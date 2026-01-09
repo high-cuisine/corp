@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: threeinrow
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -70,7 +70,7 @@ services:
         echo 'Database is up - waiting a bit more for initialization...' &&
         sleep 3 &&
         echo 'Executing migrations...' &&
-        npm run prisma:migrate:deploy &&
+        npx prisma migrate deploy --schema=./lib/infrastructere/prisma/schema.prisma &&
         echo 'Starting application...' &&
         npm run start:prod
       "
