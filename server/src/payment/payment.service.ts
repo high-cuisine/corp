@@ -27,14 +27,16 @@ export class PaymentService {
         }
 
         try {
-            if(token === 'ton') {
+            if(token === 'TON' || token === 'ton') {
                 if(Number(user.tonBalance) < Number(amount)) 
                     throw new BadRequestException('balance to low') 
                 await this.usersRepository.incrementTonBalance(Number(toId), amount)
                 await this.usersRepository.decrementTonBalance(Number(fromId), amount)
 
                 await this.telegramService.sendMessage(Number(toId), `Вы получили ${amount} TON от ${user.username}`);
-                await this.createTransaction('RECEIVE', 'TON', amount, Number(toId));
+                const receiveTransaction = await this.createTransaction('RECEIVE', 'TON', amount, Number(toId));
+                await this.createTransaction('SEND', 'TON', amount, Number(fromId));
+                return receiveTransaction;
             }
             else {
                 if(Number(user.coinBalance) < Number(amount)) 
@@ -43,12 +45,15 @@ export class PaymentService {
                 await this.usersRepository.decrementCoinBalance(Number(fromId), amount)
 
                 await this.telegramService.sendMessage(Number(toId), `Вы получили ${amount} ${token} от ${user.username}`);
-                await this.createTransaction('RECEIVE', 'COIN', amount, Number(toId));
+                const receiveTransaction = await this.createTransaction('RECEIVE', 'COIN', amount, Number(toId));
+                await this.createTransaction('SEND', 'COIN', amount, Number(fromId));
+                return receiveTransaction;
             }
         }
 
         catch(e) {
             console.error(e);
+            throw e;
         }
     }
 
@@ -59,22 +64,24 @@ export class PaymentService {
             throw new BadRequestException('user not found');
         }
 
+        let transaction;
         if(tokenFrom === 'TON') {
             if(Number(user.tonBalance) < Number(amount)) 
                 throw new BadRequestException('balance to low')
-            await this.usersRepository.incrementTonBalance(userId, amount)
             await this.usersRepository.decrementTonBalance(userId, amount)
-            await this.createTransaction('SWITCH_IN', tokenFrom, amount, userId);
+            await this.usersRepository.incrementCoinBalance(userId, amount)
+            transaction = await this.createTransaction('SWITCH_OUT', tokenFrom, amount, userId);
         }
         else {
             if(Number(user.coinBalance) < Number(amount)) 
                 throw new BadRequestException('balance to low')
-            await this.usersRepository.incrementCoinBalance(userId, amount)
-            await this.usersRepository.decrementTonBalance(userId, amount)
-            await this.createTransaction('SWITCH_OUT', tokenFrom, amount, userId);
+            await this.usersRepository.decrementCoinBalance(userId, amount)
+            await this.usersRepository.incrementTonBalance(userId, amount)
+            transaction = await this.createTransaction('SWITCH_IN', tokenTo, amount, userId);
         }
 
         await this.telegramService.sendMessage(userId, `Вы обменяли ${amount} ${tokenFrom} на ${amount} ${tokenTo}`);
+        return transaction;
     }
 
     async topUp(userId: number, token: TransactionsCoins, amount: number) {
@@ -84,14 +91,16 @@ export class PaymentService {
             throw new BadRequestException('user not found');
         }
 
+        let transaction;
         if(token === 'TON') {
             await this.usersRepository.incrementTonBalance(userId, amount)
-            await this.createTransaction('TOPUP', 'TON', amount, userId);
+            transaction = await this.createTransaction('TOPUP', 'TON', amount, userId);
         }
         else {
             await this.usersRepository.incrementCoinBalance(userId, amount)
-            await this.createTransaction('TOPUP', 'COIN', amount, userId);
+            transaction = await this.createTransaction('TOPUP', 'COIN', amount, userId);
         }
+        return transaction;
     }
 
     async getTransactions(userId: number) {
