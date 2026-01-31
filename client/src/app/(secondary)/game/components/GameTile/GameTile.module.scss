@@ -1,0 +1,26 @@
+.tile {
+  width: 66px;
+  height: 66px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
+
+  &:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.selected {
+  box-shadow: 0 0 0 3px #2c2c2c;
+  transform: scale(1.08);
+}

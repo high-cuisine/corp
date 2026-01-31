@@ -1,0 +1,26 @@
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  color: #2c2c2c;
+  text-decoration: none;
+  font-family: Manrope, sans-serif;
+  font-size: 11px;
+  line-height: 1.82;
+  transition: opacity 0.2s;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.label {
+  font-weight: 400;
+}

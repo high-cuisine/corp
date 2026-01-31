@@ -1,0 +1,209 @@
+.game {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #afe7ff;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  min-height: 0;
+}
+
+.levelCompleteOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 16px;
+}
+
+.levelCompleteCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  max-width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.levelCompleteTitle {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c2c2c;
+}
+
+.levelCompleteScore {
+  margin: 0 0 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.levelCompleteButton {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: #2c2c2c;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.gameOverOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 16px;
+}
+
+.gameOverCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  max-width: 320px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.gameOverTitle {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #c62828;
+}
+
+.gameOverScore,
+.gameOverTime {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #666;
+}
+
+.gameOverTime {
+  margin-bottom: 20px;
+}
+
+.gameOverActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gameOverButtonSecondary,
+.gameOverButtonPrimary {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.gameOverButtonSecondary {
+  background: #eee;
+  color: #2c2c2c;
+  border: none;
+}
+
+.gameOverButtonPrimary {
+  background: #2c2c2c;
+  color: #fff;
+  border: none;
+}
+
+.exitConfirmOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  padding: 16px;
+}
+
+.exitConfirmCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.exitConfirmText {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #2c2c2c;
+}
+
+.exitConfirmActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.exitConfirmCancel,
+.exitConfirmOk {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.exitConfirmCancel {
+  background: #eee;
+  color: #2c2c2c;
+  border: none;
+}
+
+.exitConfirmOk {
+  background: #2c2c2c;
+  color: #fff;
+  border: none;
+}

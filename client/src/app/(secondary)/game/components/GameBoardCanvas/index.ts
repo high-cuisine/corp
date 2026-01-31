@@ -1,0 +1,1 @@
+export { GameBoardCanvas } from './GameBoardCanvas';

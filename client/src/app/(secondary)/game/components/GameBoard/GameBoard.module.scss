@@ -1,0 +1,10 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 66px);
+  grid-template-rows: repeat(5, 66px);
+  gap: 2px;
+  width: fit-content;
+  padding: 4px;
+  /* Свайпы не прокручивают страницу на телефоне */
+  touch-action: none;
+}
