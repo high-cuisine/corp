@@ -1,10 +1,11 @@
-import Image from "next/image";
-import { PaymentList } from "@/components/features/payments-list/payments-list";
+import { ArchivmentList } from "./components/ArchivmentList/ArchivmentList";
+import { GameBanner } from "./components/GameBanner/GameBanner";
 
 export default function Work() {
   return (
     <div>
-      <PaymentList></PaymentList>
+      <GameBanner/>
+      <ArchivmentList/>
     </div>
   );
 }

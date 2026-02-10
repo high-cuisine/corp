@@ -1,0 +1,22 @@
+.banner {
+    margin-top: 4vh;
+    position: relative;
+
+    & .levelCounter {
+        position: absolute;
+        right:10px;
+        top:10px;
+        background: linear-gradient(90deg, #2C2C2C80 -10%, #2C2C2C 100%);
+        border-radius: 15px;
+        padding: 2px 5px;
+        font-size: 12px;
+        color:#fff;
+        z-index: 100;
+    }
+
+    & .image {
+        transition: all 3s ease;
+    margin-bottom: 4vh;
+    position: relative;
+    }
+}

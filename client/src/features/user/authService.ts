@@ -15,6 +15,15 @@ class AuthService {
         return await userService.findUserByUsername(username);
     }
 
+    async completeLevel(): Promise<{ id: number; level: number }> {
+        const result = await userService.completeLevel();
+        const { user, setUser } = useUserStore.getState();
+        if (user) {
+            setUser({ ...user, level: result.level });
+        }
+        return result;
+    }
+
 }
 
 export const authService = new AuthService();

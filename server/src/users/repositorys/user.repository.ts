@@ -73,6 +73,17 @@ export class UserRepository {
         }));
     }
 
+    async incrementLevel(id: number): Promise<User> {
+        return await this.prisma.user.update({
+            where: { id },
+            data: {
+                level: {
+                    increment: 1,
+                },
+            },
+        });
+    }
+
     async findUserByUsername(username: string): Promise<User | null> {
         return (await this.prisma.user.findFirst({
             where: { username },

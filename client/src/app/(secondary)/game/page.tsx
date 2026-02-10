@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { authService } from '@/features/user/authService';
 import { useGameBoard } from './hooks';
 import { GameHeader } from './components';
 import cls from './game.module.scss';
@@ -41,6 +42,16 @@ export default function GamePage() {
     // gemIconUrls: ['/gems/1.svg', ...],  // опционально: свои картинки для типов камней
   });
 
+  const handleNextLevel = async () => {
+    try {
+      await authService.completeLevel();
+    } catch (error) {
+      console.error('Failed to complete level on server', error);
+    } finally {
+      startNextLevel();
+    }
+  };
+
   const handleExitConfirm = () => {
     setShowExitConfirm(false);
     router.push('/');
@@ -75,7 +86,7 @@ export default function GamePage() {
             <button
               type="button"
               className={cls.levelCompleteButton}
-              onClick={startNextLevel}
+              onClick={handleNextLevel}
             >
               {levelNumber < 20 ? 'Следующий уровень' : 'Играть снова'}
             </button>

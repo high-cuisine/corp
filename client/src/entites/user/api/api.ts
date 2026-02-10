@@ -11,6 +11,11 @@ class UserService {
         // Сервер возвращает объект напрямую {id, username, photoUrl}
         return response.data;
     }
+
+    async completeLevel(): Promise<{ id: number; level: number }> {
+        const response = await api.$authHost.post('/game/end-level');
+        return response.data;
+    }
 }
 
 export const userService = new UserService();
