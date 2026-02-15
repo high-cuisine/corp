@@ -1,0 +1,29 @@
+<svg width="411" height="164" viewBox="0 0 411 164" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="1.5" y="1.5" width="408" height="161"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(3px);clip-path:url(#bgblur_0_1595_2236_clip_path);height:100%;width:100%"></div></foreignObject><rect data-figma-bg-blur-radius="6" x="8" y="8" width="395" height="148" rx="15.5" fill="white" fill-opacity="0.01" stroke="url(#paint0_linear_1595_2236)"/>
+<g filter="url(#filter1_f_1595_2236)">
+<rect x="7.5" y="7.5" width="396" height="149" rx="16" fill="white" fill-opacity="0.01"/>
+<rect x="7.5" y="7.5" width="396" height="149" rx="16" stroke="url(#paint1_linear_1595_2236)" stroke-width="3"/>
+</g>
+<defs>
+<clipPath id="bgblur_0_1595_2236_clip_path" transform="translate(-1.5 -1.5)"><rect x="8" y="8" width="395" height="148" rx="15.5"/>
+</clipPath><filter id="filter1_f_1595_2236" x="0" y="0" width="411" height="164" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="3" result="effect1_foregroundBlur_1595_2236"/>
+</filter>
+<linearGradient id="paint0_linear_1595_2236" x1="400" y1="7.50003" x2="6.26928" y2="132.56" gradientUnits="userSpaceOnUse">
+<stop stop-color="#8DD6FF"/>
+<stop offset="0.171341" stop-color="white" stop-opacity="0.4"/>
+<stop offset="0.408654" stop-color="white" stop-opacity="0.1"/>
+<stop offset="0.576923" stop-color="white" stop-opacity="0.1"/>
+<stop offset="0.834525" stop-color="white" stop-opacity="0.4"/>
+<stop offset="1" stop-color="#8DD6FF"/>
+</linearGradient>
+<linearGradient id="paint1_linear_1595_2236" x1="403.5" y1="16.0143" x2="3.2198" y2="135.208" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0084FF"/>
+<stop offset="0.0887858" stop-color="white" stop-opacity="0"/>
+<stop offset="0.897727" stop-color="white" stop-opacity="0"/>
+<stop offset="1" stop-color="#0084FF"/>
+</linearGradient>
+</defs>
+</svg>
