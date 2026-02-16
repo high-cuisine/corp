@@ -90,4 +90,41 @@ export class UserRepository {
         }));
     }
 
+    /** Количество приглашённых друзей (где пользователь — referrer). */
+    async countFriendsAsReferrer(userId: number): Promise<number> {
+        return this.prisma.friends.count({
+            where: { referrerId: userId },
+        });
+    }
+
+    /** Создать связь реферала: кто пригласил (referrerId) и кого пригласили (referredId). Идемпотентно. */
+    async createReferral(referrerId: number, referredId: number): Promise<void> {
+        await this.prisma.friends.upsert({
+            where: {
+                referrerId_referredId: { referrerId, referredId },
+            },
+            create: { referrerId, referredId },
+            update: {},
+        });
+    }
+
+    /** Список приглашённых друзей (referred) для пользователя userId. */
+    async findReferredFriends(userId: number): Promise<{ id: number; username: string | null; photoUrl: string | null; invitedAt: Date }[]> {
+        const rows = await this.prisma.friends.findMany({
+            where: { referrerId: userId },
+            orderBy: { createdAt: 'desc' },
+            select: {
+                referred: {
+                    select: { id: true, username: true, photoUrl: true },
+                },
+                createdAt: true,
+            },
+        });
+        return rows.map((r) => ({
+            id: r.referred.id,
+            username: r.referred.username,
+            photoUrl: r.referred.photoUrl,
+            invitedAt: r.createdAt,
+        }));
+    }
 }

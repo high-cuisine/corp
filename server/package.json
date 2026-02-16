@@ -24,7 +24,11 @@
     "prisma:studio": "prisma studio --schema=./lib/infrastructere/prisma/schema.prisma",
     "prisma:format": "prisma format --schema=./lib/infrastructere/prisma/schema.prisma",
     "prisma:validate": "prisma validate --schema=./lib/infrastructere/prisma/schema.prisma",
-    "prisma:push": "prisma db push --schema=./lib/infrastructere/prisma/schema.prisma"
+    "prisma:push": "prisma db push --schema=./lib/infrastructere/prisma/schema.prisma",
+    "prisma:seed": "prisma db seed --schema=./lib/infrastructere/prisma/schema.prisma"
+  },
+  "prisma": {
+    "seed": "ts-node lib/infrastructere/prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

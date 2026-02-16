@@ -39,9 +39,21 @@ model Transaction {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum AchievementType {
+  LEVEL_REACHED   // пройти N уровней (targetValue = уровень)
+  FRIENDS_INVITED // пригласить N друзей
+  COINS_EARNED    // заработать N монет
+  GAMES_PLAYED    // сыграть N игр
+  CUSTOM          // произвольное, проверка вручную или по другому полю
+}
+
 model Achievement {
   id               Int              @id @default(autoincrement())
-  description      String
+  title            String          // короткое название, например "Первый уровень"
+  description      String           // полный текст для экрана достижения
+  type             AchievementType  // тип условия — по нему выбираем логику на бэке/клиенте
+  targetValue      Int?             // целевое значение (уровень, кол-во друзей, монет и т.д.), null для CUSTOM
+  sortOrder        Int              @default(0) // порядок в списке
   createdAt        DateTime         @default(now())
 
   userAchievements UserAchievement[]

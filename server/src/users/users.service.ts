@@ -47,4 +47,14 @@ export class UsersService {
         }
         return user;
     }
+
+    /** Привязать реферала: пользователь referrerId пригласил пользователя referredId. */
+    async addReferral(referrerId: number, referredId: number): Promise<void> {
+        await this.userRepository.createReferral(referrerId, referredId);
+    }
+
+    /** Список приглашённых друзей для пользователя (кто пришёл по его реферальной ссылке). */
+    async getFriends(userId: number): Promise<{ id: number; username: string | null; photoUrl: string | null; invitedAt: Date }[]> {
+        return this.userRepository.findReferredFriends(userId);
+    }
 }   

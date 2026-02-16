@@ -1,4 +1,5 @@
-import { Body, Controller, Get, NotFoundException, Post, Query, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, NotFoundException, Post, Query, Req, Res, UseGuards } from "@nestjs/common";
+import { Request } from "express";
 import { Response } from "express";
 import { UsersService } from "./users.service";
 import { UserLoginInterface } from "./interfaces/user-login.interface";
@@ -46,5 +47,15 @@ export class UsersController {
       username: user.username,
       photoUrl: user.photoUrl,
     };
+  }
+
+  @Get('/friends')
+  @UseGuards(JwtAuthGuard)
+  async getFriends(@Req() req: Request) {
+    const user = req.user as { userId: number } | undefined;
+    if (!user?.userId) {
+      throw new NotFoundException('User not found in request');
+    }
+    return this.usersService.getFriends(Number(user.userId));
   }
 }

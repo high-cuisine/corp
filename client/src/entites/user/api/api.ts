@@ -16,6 +16,26 @@ class UserService {
         const response = await api.$authHost.post('/game/end-level');
         return response.data;
     }
+
+    async getAchievements(): Promise<{
+        achievements: {
+            id: number;
+            title: string;
+            description: string;
+            type: string;
+            targetValue: number | null;
+            sortOrder: number;
+            obtained: boolean;
+        }[];
+    }> {
+        const response = await api.$authHost.get('/achievement');
+        return response.data;
+    }
+
+    async getFriends(): Promise<{ id: number; username: string | null; photoUrl: string | null; invitedAt: string }[]> {
+        const response = await api.$authHost.get('/users/friends');
+        return response.data;
+    }
 }
 
 export const userService = new UserService();

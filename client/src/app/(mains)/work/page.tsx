@@ -3,9 +3,9 @@ import { GameBanner } from "./components/GameBanner/GameBanner";
 
 export default function Work() {
   return (
-    <div>
-      <GameBanner/>
-      <ArchivmentList/>
+    <div className="container">
+      <GameBanner />
+      <ArchivmentList />
     </div>
   );
 }

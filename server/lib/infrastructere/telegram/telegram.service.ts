@@ -69,19 +69,41 @@ export class TelegramService implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
+    // Параметр из ссылки: https://t.me/bot?start=7171405334 → referrerTelegramId = 7171405334
+    const startPayload = this.getStartPayload(ctx);
+
     const user = await this.userService.findUserByTelegramId(telegramId);
 
     if (!user) {
       const photoUrl = await this.getUserPhoto(ctx);
-      await this.userService.createUser({
+      const newUser = await this.userService.createUser({
         telegramId: telegramId.toString(),
         username: ctx.from?.username || '',
         photoUrl: photoUrl || ''
       });
+
+      if (startPayload) {
+        const referrerTelegramId = parseInt(startPayload, 10);
+        if (!Number.isNaN(referrerTelegramId)) {
+          const referrer = await this.userService.findUserByTelegramId(referrerTelegramId);
+          if (referrer && referrer.id !== newUser.id) {
+            await this.userService.addReferral(referrer.id, newUser.id);
+          }
+        }
+      }
+
       await ctx.reply('Добро пожаловать! Ваш профиль создан.');
     } else {
       await ctx.reply('Добро пожаловать обратно!');
     }
+  }
+
+  /** Достаёт параметр из команды /start (например "/start 7171405334" → "7171405334"). */
+  private getStartPayload(ctx: Context): string | null {
+    const text = ctx.message && 'text' in ctx.message ? ctx.message.text : null;
+    if (!text || typeof text !== 'string') return null;
+    const parts = text.trim().split(/\s+/);
+    return parts[0] === '/start' && parts[1] ? parts[1] : null;
   }
 
   async getUserPhoto(ctx: Context): Promise<string | null> {
