@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Modal } from '@/components/layout/modal/modal';
 import Button from '@/components/ui/button/button';
@@ -232,5 +232,11 @@ const Send = () => {
     );
 };
 
-export default Send;
+export default function SendPage() {
+    return (
+        <Suspense fallback={null}>
+            <Send />
+        </Suspense>
+    );
+}
 
