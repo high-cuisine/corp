@@ -120,11 +120,61 @@
 
 .qrCodePage {
    & .title {
- 
     font-size: 24px;
     font-weight: 500;
     color: #2C2C2C;
     text-align: center;
     margin-bottom: 20px;
    }
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.copyButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #2C2C2C;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 0.85;
+    }
+
+    &:active {
+        opacity: 0.7;
+    }
+}
+
+.shareButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2C2C2C;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 0.85;
+    }
+
+    &:active {
+        opacity: 0.7;
+    }
 }

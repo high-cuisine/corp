@@ -29,6 +29,7 @@ declare global {
                 onEvent: (event: string, callback: (data: Record<string, unknown>) => void) => void;
                 offEvent: (event: string) => void;
                 openWallet: (params?: { url?: string }) => void;
+                openTelegramLink?: (url: string) => void;
             };
         };
         TelegramWebviewProxy?: {

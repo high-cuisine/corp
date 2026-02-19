@@ -6,6 +6,11 @@ export interface SelectedRecipient {
     photoUrl?: string;
 }
 
+export interface UseSendFormOptions {
+    initialCoin?: string | null;
+    initialRecipient?: SelectedRecipient | null;
+}
+
 interface UseSendFormReturn {
     selectedCoin: string | null;
     selectedRecipient: SelectedRecipient | null;
@@ -16,9 +21,9 @@ interface UseSendFormReturn {
     resetForm: () => void;
 }
 
-export const useSendForm = (): UseSendFormReturn => {
-    const [selectedCoin, setSelectedCoin] = useState<string | null>(null);
-    const [selectedRecipient, setSelectedRecipient] = useState<SelectedRecipient | null>(null);
+export const useSendForm = (options?: UseSendFormOptions): UseSendFormReturn => {
+    const [selectedCoin, setSelectedCoin] = useState<string | null>(options?.initialCoin ?? null);
+    const [selectedRecipient, setSelectedRecipient] = useState<SelectedRecipient | null>(options?.initialRecipient ?? null);
     const [amount, setAmount] = useState('');
 
     const resetForm = () => {

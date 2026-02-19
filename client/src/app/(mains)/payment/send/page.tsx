@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Modal } from '@/components/layout/modal/modal';
 import Button from '@/components/ui/button/button';
 import cls from './send.module.scss';
@@ -14,12 +15,18 @@ import {
     calculateCommission 
 } from './helpers/send.helpers';
 import { AVAILABLE_COINS } from './helpers/send.constants';
+import { authService } from '@/features/user/authService';
 
 const Send = () => {
+    const searchParams = useSearchParams();
     const { photoUrl: telegramPhotoUrl } = useTelegram();
     const [isCoinModalOpen, setIsCoinModalOpen] = useState(false);
     const [isRecipientModalOpen, setIsRecipientModalOpen] = useState(false);
-    
+    const prefilled = useRef(false);
+
+    const tokenParam = searchParams.get('token');
+    const toParam = searchParams.get('to');
+
     const {
         selectedCoin,
         selectedRecipient,
@@ -28,7 +35,23 @@ const Send = () => {
         setSelectedRecipient,
         setAmount,
         resetForm,
-    } = useSendForm();
+    } = useSendForm({
+        initialCoin: tokenParam,
+    });
+
+    useEffect(() => {
+        if (prefilled.current || !toParam) return;
+        prefilled.current = true;
+        authService.getUser(toParam).then((user) => {
+            if (user?.id && user?.username) {
+                setSelectedRecipient({
+                    id: String(user.id),
+                    username: user.username,
+                    photoUrl: user.photoUrl ?? undefined,
+                });
+            }
+        }).catch(() => {});
+    }, [toParam, setSelectedRecipient]);
 
     const {
         searchQuery,

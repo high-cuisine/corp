@@ -4,7 +4,8 @@ import Script from "next/script";
 import { TelegramGlobal } from '@/shared/declare/telegram-global';
 import { TonConnectProvider } from '@/shared/providers/ton-connect-provider';
 import { Toasts } from '@/components/layout/toasts/toasts';
-import TelegramInit from '@/shared/lib/base/telegramInit';    
+import TelegramInit from '@/shared/lib/base/telegramInit';
+import StartParamRouter from '@/shared/lib/base/StartParamRouter';
 import "./globals.css";
 import { AuthComponent } from '../features/user/Auth';
 
@@ -29,6 +30,7 @@ export default function RootLayout({
         <TonConnectProvider>
           <div className="container mx-auto h-[calc(100vh)] pb-[168px] overflow-y-auto">
             <AuthComponent />
+            <StartParamRouter />
             {children}
             <TelegramGlobal/>
           </div>
