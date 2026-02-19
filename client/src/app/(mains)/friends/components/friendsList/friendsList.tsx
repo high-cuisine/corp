@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { UserAvatar } from '@/components/ui/userAvatar/userAvatar';
 import { userService } from '@/entites/user/api/api';
+import { getAvatarUrl } from '@/shared/lib/avatarUrl';
 import cls from './friendsList.module.scss';
 
 export interface FriendItem {
@@ -35,10 +36,7 @@ const FriendsList = () => {
     };
   }, []);
 
-  const avatarUrl = (photoUrl: string | null) => {
-    if (!photoUrl) return '';
-    return photoUrl.startsWith('http') ? photoUrl : `/avatars/${photoUrl}`;
-  };
+  const avatarSrc = (photoUrl: string | null) => getAvatarUrl(photoUrl);
 
   if (loading) {
     return (
@@ -68,7 +66,7 @@ const FriendsList = () => {
           friends.map((friend) => (
             <div className={cls.friendItem} key={friend.id}>
               <UserAvatar
-                avatar={avatarUrl(friend.photoUrl)}
+                avatar={avatarSrc(friend.photoUrl)}
                 name={friend.username ?? 'Пользователь'}
               />
               <span className={cls.username}>

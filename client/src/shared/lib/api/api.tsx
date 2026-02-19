@@ -1,7 +1,8 @@
 
 import axios, { InternalAxiosRequestConfig } from 'axios';
 
-const baseURL = '/api';
+/** Базовый URL бэкенда (например https://evil-corp.online/api). Если не задан — запросы идут на тот же origin (/api). */
+export const baseURL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 const $host = axios.create({
     baseURL: baseURL

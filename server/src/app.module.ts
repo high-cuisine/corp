@@ -5,6 +5,7 @@ import { TelegramModule } from '../lib/infrastructere/telegram/telegram.module';
 import { AchievementModule } from './achievement/achievement.module';
 import { GameModule } from './game/game.module';
 import { PaymentModule } from './payment/payment.module';
+import { StaticModule } from './static/static.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
     PaymentModule,
     GameModule,
     AchievementModule,
+    StaticModule,
   ],
   controllers: [],
   providers: [],
