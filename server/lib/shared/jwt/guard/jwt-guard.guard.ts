@@ -12,6 +12,7 @@ import {
     interface Request {
       user?: {
         userId: number;
+        level: number;
       };
     }
   }
@@ -30,9 +31,10 @@ import {
   
       try {
         const payload = this.jwtService.validateToken(token);
-        // Добавляем userId в request для использования в контроллерах
+        // Добавляем userId и level в request для использования в контроллерах
         request.user = { 
-          userId: payload.userId 
+          userId: payload.userId,
+          level: payload.level ?? 1,
         };
         return true;
       } catch (error) {
