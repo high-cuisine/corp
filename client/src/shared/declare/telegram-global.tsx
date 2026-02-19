@@ -11,6 +11,7 @@ declare global {
                         username: string;
                         photo_url: string;
                     };
+                    start_param?: string;
                 };
                 HapticFeedback?: {
                     impactOccurred: (style: 'light' | 'medium' | 'heavy') => void;
