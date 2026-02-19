@@ -53,6 +53,8 @@ services:
       REDIS_PORT: 6379
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - statics_data:/app/public/avatars
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,6 +80,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  statics_data:
 
 networks:
   app-network:
